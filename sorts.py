@@ -5,26 +5,26 @@
 #insert in the sorted list
 #while there is element in the unsorted list
 
-def selectionsort(a):
-	for j in xrange(len(a)):
+def selectionsort(array):
+	for j in xrange(len(array)):
 		iMin=j
-		for i in xrange(j+1,len(a)):
-			if a[i] < a[iMin]:
+		for i in xrange(j+1,len(array)):
+			if array[i] <array[iMin]:
 				iMin=i
 
 		if iMin!=j:
-			aux = a[j]
-			a[j]=a[iMin]
-			a[iMin]=aux
+			aux = array[j]
+			aarray[j]=array[iMin]
+			array[iMin]=aux
 		#	print(a[:j])
-def insertionsort(a):
-    for i in xrange(1, len(a)):
+def insertionsort(array):
+    for i in xrange(1, len(array)):
         j = i-1 
-        key = a[i]
-        while (a[j] > key) and (j >= 0):
-           a[j+1] = a[j]
+        key = array[i]
+        while (array[j] > key) and (j >= 0):
+           array[j+1] = array[j]
            j -= 1
-        a[j+1] = key
+        [j+1] = key
 
 def quicksort(arr):
     less = []
@@ -45,32 +45,42 @@ def quicksort(arr):
         more = quicksort(more)
         return less + pivotList + more
 
-def heapsort(lst):
+def heapsort(array):
   ''' Heapsort. Note: this function sorts in-place (it mutates the list). '''
  
   # in pseudo-code, heapify only called once, so inline it here
-  for start in range((len(lst)-2)/2, -1, -1):
-    siftdown(lst, start, len(lst)-1)
+  for start in range((len(array)-2)/2, -1, -1):
+    siftdown(array, start, len(array)-1)
  
-  for end in range(len(lst)-1, 0, -1):
-    lst[end], lst[0] = lst[0], lst[end]
-    siftdown(lst, 0, end - 1)
-  return lst
+  for end in range(len(array)-1, 0, -1):
+    array[end], array[0] = array[0], array[end]
+    siftdown(array, 0, end - 1)
+  return array
  
-def siftdown(lst, start, end):
+def siftdown(array, start, end):
   root = start
   while True:
     child = root * 2 + 1
     if child > end: break
-    if child + 1 <= end and lst[child] < lst[child + 1]:
+    if child + 1 <= end and array[child] > array[child + 1]:
       child += 1
-    if lst[root] < lst[child]:
-      lst[root], lst[child] = lst[child], lst[root]
+    if array[root] > array[child]:
+      array[root], array[child] = array[child], array[root]
       root = child
     else:
       break
 
-def mergesort(left, right):
+def mergesort(array):
+	if len(array) < 2:
+		return array
+
+	middle = int(len(array)/2)
+	left = mergesort(array[:middle])
+	right = mergesort(array[middle:])
+
+	return merge(left, right)
+
+def merge(left, right):
     result = []
     left_idx, right_idx = 0, 0
     while left_idx < len(left) and right_idx < len(right):
