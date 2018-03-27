@@ -70,7 +70,17 @@ def siftdown(lst, start, end):
     else:
       break
 
-def mergesort(left, right):
+def mergesort(list):
+	if len(list) < 2:
+		return list
+
+	middle = int(len(list)/2)
+	left = mergesort(list[:middle])
+	right = mergesort(list[middle:])
+
+	return merge(left, right)
+
+def merge(left, right):
     result = []
     left_idx, right_idx = 0, 0
     while left_idx < len(left) and right_idx < len(right):
