@@ -1,0 +1,30 @@
+Parte 2
+
+a) Código
+b) Demostraciones
+   1) El algoritmo es de orden O(cantidadEquipos * cantidadJugadores).
+	Sea una función P(t) que represente la cantidad de pares (x,y) tales que
+	el equipo "x" le haya ofrecido una posición al jugador "y" (independientemente de la
+	posición que ocuparía "y" en el equipo) al término de la iteración t del bloque interno
+	(línea 66).
+	Entonces P(t+1) > P(t) para todo t ya que un equipo no ofrece 2 veces al mismo jugador.
+	Pero P() al final de todas las iteraciones puede ser a lo sumo igual a todas las
+	combinaciones posibles de equipo-jugador, por lo tanto habrán a lo sumo
+	(cantidadEquipos * cantidadJugadores) iteraciones.
+
+   2) El algoritmo siempre devuelve un matching estable.
+	Lo probamos por reducción al absurdo.
+	Supongamos que el algoritmo devuelve 2 tuplas (e,j,j2,j3,j4...) y (e',j',ja,jb,jc,...) 		tales que:
+		el equipo "e" prefiere al jugador "j'" antes que a "j" y 
+		el jugador "j'" prefiere al equipo "e" antes que a "e'"
+
+	¿Es posible que "e" le haya ofrecido a "j'" antes que a "j"?
+	>Si no fue así, entonces "j" debió estar antes que "j'" en la lista de preferencia de 		"e", lo cual contradice la suposición inicial de que "e" prefiere a "j'".
+	
+	>Si fue así, entonces "j' " rechazó a "e" por algún mejor equipo "e'' ".
+	Entonces o bien e''=e', lo cual quiere decir que "j' " prefirió al equipo "e' " por 		sobre "e". O bien e''!=e' y entonces por transitividad "e' " fue preferido por "j' "
+	por sobre "e". Ambas contradicen la suposición inicial de que el jugador "j' "
+	prefiere al equipo "e" antes que a "e' ".
+
+c) Ejecución (screenshots).
+
