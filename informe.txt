@@ -632,9 +632,10 @@ if __name__ == "__main__":
 	prefiere al equipo e antes que a e'.
 
 \subsection{Ejecutar el algoritmo utilizando un set construido especialmente para el caso.}
-El set está subido al repo. Acá se puede puegar un screenshot de la ejecución.
+Para poder probar el algoritmo hemos construido un set de pruebas consistente en archivos que contienen las preferencias de los jugadores y de los equipos. Las tablas que se proveen a continuación representan el contenido de estos archivos, y la última tabla es el resultado de la ejecución del algoritmo.
 
 \subsubsection{Preferencias de los equipos}
+En la siguiente tabla, las columnas representan los equipos numerados del 0 al 19. Cada uno tiene el listado de los 200 jugadores ordenados de arriba a abajo por preferencia desde el más preferido al menos preferido.
 {\tiny
 \begin{center}
 \begin{longtable}{ |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } 
@@ -846,6 +847,7 @@ El set está subido al repo. Acá se puede puegar un screenshot de la ejecución
 }
 
 \subsubsection{Preferencias de los jugadores}
+En la siguiente tabla, las filas representan los jugadores numerados del 0 al 199. Cada uno tiene el listado de los 20 equipos ordenados de izquierda a derecha por preferencia desde el más preferido al menos preferido.
 {\tiny
 \begin{center}
 \begin{longtable}{ |c||c c c c c c c c c c c c c c c c c c c c| } 
@@ -1055,9 +1057,10 @@ El set está subido al repo. Acá se puede puegar un screenshot de la ejecución
 }
 
 \subsubsection{Equipos resultantes}
+En la siguiente tabla, las columnas representan los equipos numerados del 0 al 19. Cada uno tiene el listado de los 10 jugadores resultantes de la aplicación del algoritmo de Gale-Shapley.
 {\tiny
 \begin{center}
-\begin{longtable}{ |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } 
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } 
  \hline
 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & 16 & 17 & 18 & 19 \\ \hline \hline
 76 & 68 & 173 & 105 & 197 & 104 & 176 & 78 & 80 & 87 & 37 & 152 & 73 & 189 & 118 & 129 & 92 & 106 & 43 & 98 \\
@@ -1071,7 +1074,7 @@ El set está subido al repo. Acá se puede puegar un screenshot de la ejecución
 15 & 1 & 165 & 107 & 39 & 126 & 111 & 159 & 167 & 48 & 23 & 130 & 57 & 35 & 147 & 45 & 14 & 148 & 82 & 169 \\
 100 & 103 & 192 & 59 & 155 & 140 & 151 & 172 & 31 & 133 & 16 & 8 & 86 & 69 & 26 & 49 & 132 & 174 & 186 & 20 \\
  \hline
-\end{longtable}
+\end{tabular}
 \end{center}
 }
 
