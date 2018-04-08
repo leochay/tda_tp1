@@ -75,6 +75,9 @@
 %List of Tables
 %1 Overview
 
+\tableofcontents
+\vfill
+
 \section{Parte 1: Cálculo empírico de tiempos de ejecución}
 Implementar los siguientes algoritmos de ordenamiento para números enteros positivos:
 \begin{itemize}
@@ -1077,5 +1080,16 @@ En la siguiente tabla, las columnas representan los equipos numerados del 0 al 1
 \end{tabular}
 \end{center}
 }
+
+\subsubsection{Instrucciones para la ejecución del algoritmo}
+Para poder ejecutar el algoritmo, es necesario tener la versión 2.7 de Python instalada.
+Si desea ejecutar el algoritmo con el set de pruebas provisto escriba la siguiente línea de comandos en la consola de su sistema operativo:
+\begin{lstlisting}
+py -2 galeshapely2.py
+\end{lstlisting}
+La ejecución de esta línea mostrará el contenido de los archivos de preferencias, y el resultado de la ejecución.
+\vspace{0.3cm}
+
+\includegraphics{screen_gs_result.png}\par\vspace{1cm}
 
 \end{document}
