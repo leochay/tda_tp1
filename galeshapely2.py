@@ -39,7 +39,7 @@ def generate_test_set(files_amount, lines_amount, file_name_prefix):
 		for j in members_ranking:
 		  fh.write("%s\n" % (j+1))
 		fh.close()
-
+		
 def init_teams():
 	teams = [[FREE_POSITION for x in range(players_by_team)] for y in range(teams_amount)]
 	return teams
@@ -90,13 +90,6 @@ def run_gale_shapely(teams, teams_preferences, players_preferences):
 				else:
 					if(compare_preferences(players_preferences[team_preference-1], team_number+1, other_team_number+1) > 0):
 						move_player(teams[other_team_number], teams[team_number], team_preference)
-				#print("\n")
-				#print_everything(teams_preferences, players_preferences, teams)
-			#print("\n")
-			#print_everything(teams_preferences, players_preferences, teams)
-		#print("\n")
-		#print_everything(teams_preferences, players_preferences, teams)
-	print_everything(teams_preferences, players_preferences, teams)
 
 def print_preferences(preferences):
 	preferences_str = [str(x) for x in preferences]
@@ -128,9 +121,42 @@ def main():
 	players_preferences = load_players_peferences()
 	teams = init_teams()
 
-	print_everything(teams_preferences, players_preferences, teams)
-
 	run_gale_shapely(teams, teams_preferences, players_preferences)
+	
+	print_everything(teams_preferences, players_preferences, teams)
+	
+	return teams
 
+	
+#Genera la tabla de jugadores y equipos en LaTeX para el informe
+def to_latex(matrix):
+	column_definition = "|".join(["c" for x in range(len(matrix[0]))])
+	print("\\begin{center}")
+	print("\\begin{longtable}{ |" + column_definition + "| } ")
+	print(" \\hline")
+	
+	for row in range(len(matrix)):
+		sys.stdout.write(" & ".join(map(str, matrix[row])) + " \\\\\n")
+
+	print(" \\hline")
+	print("\\end{longtable}")
+	print("\\end{center}")
+
+def players_preferences_to_latex():
+	preferences = load_players_peferences()
+	matrix = [range(len(preferences))] + zip(*preferences)
+	matrix = zip(*matrix)
+	to_latex(matrix)
+	
+def teams_preferences_to_latex():
+	preferences = load_teams_preferences()
+	matrix = [range(len(preferences))] + zip(*preferences)
+	to_latex(matrix)
+
+def results_to_latex():
+	results = main()
+	matrix = [range(len(results))] + zip(*results)
+	to_latex(matrix)
+	
 if __name__ == "__main__":
-    main()
+	main()
