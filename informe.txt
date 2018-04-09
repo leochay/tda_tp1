@@ -101,13 +101,34 @@ O((n-1)+(n-2)+...+1)=O(\sum_{i=1}^{n-1} i) \\
 O(n^2)=\frac{n!}{2!(n-2)!}= \frac{1}{2}n(n-1)=\frac{1}{2}(n^2-n)
 \end{align}
 Este algoritmo requiere de la ejecución de todos los pasos independientemente del conjunto de datos motivo por el cual el tiempo promedio y el del peor caso es el mismo $O(n^2)=\frac{1}{2}(n^2-n)$
-\subsection{Inserción}
+\subsubsection{Inserción}
 Nuevamente el algoritmo realiza un recorrido de todo el array (bucle exterior for) realizando $n-1$ comparaciones. Para cada elemento lo compara contra todos los anteriores que ya se encuentran ordenados(bucle interior) es decir para el primer elemento no hay comparaciones, para el segundo elemento lo compara contra el primero y asi ... hasta llegar al n-ésimo elemento que debe ser comparado contra los $n-1$ elementos ya ordenados.  Es decir, es el mismo orden que el algoritmo de selección con la salvedad que las comparaciones se realizan contra un array ordenado, con lo cual no hace falta realizar todas las comparaciones sino solo cuando el elemento de comparacion sea mayor que todos los restantes.  De ahi que el bucle interior sea un while con lo cual en general es un poco más rápido que el algoritmo de selección con una salvedad.  El algoritmo de selección solo realiza un swap por bucle interior, en cambio inserción realiza tantos swaps como elementos sean mayores que él en cada bucle interior.  Esto es debido a la implementación elegida y en algunos casos como el nuestro puede ponderar más y terminar dando que el algoritmo de insercin tenga valores mayores que el de seleccion.
 \begin{align*}
 O(1+2+3+...+(n-2)+(n-1))=O(\sum_{i=1}^{n-1} i)
 O(n^2)=\frac{1}{2}(n^2-n)
 \end{align*}Esto es para el peor caso para el caso promedio el valor seria menor.
-\subsection*{Quicksort}
+\subsubsection{Quicksort}
+Quicksort es un algoritmo basado en la técnica de División y Conquista, estos algoritmos se caracterizan por ir dividiendo el problema en partes, resolverlo por separado para luego juntar las soluciones.
+En este caso, el algoritmo se llama a sí mismo $2$ veces. Por lo tanto, al ser de División y Conquista, por el Teorema del Maestro tenemos que:
+\begin{align}
+T_{QS}(n)=aT_{QS}(\frac{n}{b})+O(n^c)
+\end{align}
+donde $a$ representa la cantidad de llamadas recursivas que deben ser al menos $1$, $b$ es la cantidad de partes en las cuales se divide el problema que debe ser mayor a $1$ y $O(n^c)$ el costo de trabajo hecho por fuera de las llamadas recursivas.
+
+En el caso promedio, quicksort divide el vector en dos partes respecto de si son más grandes o más chicos que el número tomado como pivote. En estos casos, ambos vectores tienen una cantidad similar de elementos, haciendo que el algoritmo sea más balanceado. Cuando sucede esto podemos decir que:
+\begin{align}
+T_{QS}(n)=2T_{QS}(\frac{n-1}{2})+O(n)
+\end{align}
+Por el Teorema del Maestro, podemos concluir que si $log_b(a)=c$ entonces este algoritmo tiene como cota a $O(nlogn)$, estando muy cerca al mejor caso. 
+
+Ahora veamos el peor caso, este sucede cuando uno de los vectores en los que se divide el problema queda vacio y el otro tiene los n-1 elementos restantes. Esto sucede porque el pivote elegido es unos de los extremos de la lista.
+
+Por lo tanto, a cada llamada recursiva, se va a ir ordenando de a un elemento por vez, haciendo que se perezca mucho en su rendimiento a los ordenamientos de selección y de inserción. Su análisis computacional nos lleva a:
+\begin{align}
+T_{QS}(n)=T_{QS}(n-1) + O(n)=\sum_{k=1}^{n}O(k) = O(n^2)
+\end{align}
+
+Para concluir, podemos ver que es algoritmo que más diferencia tiene entre el caso promedio $O(nlogn)$ y el peor caso $O(n^2)$ generando que sea un algoritmo inestable, aunque dependiendo de la implementación el peor caso puede ser optimizado.
 \subsubsection{Heapsort}
 Se trata de un método de ordenamiento basado en un heap, a este algoritmo lo podemos dividir en dos partes:
 \begin{itemize}
@@ -135,18 +156,14 @@ O(20log(n))(n-1) = O(20nlog(n))
 \end{align}
 En el caso promedio, obviamente el bucle $while$ dentro de siftdown se ejecuta menos veces que en el peor caso. Eso genera que el caso promedio este bastante por debajo de $O(20nlog(n))$ y siendo un algoritmo de ordenamiento aun más rápido que el mergesort, como veremos en la práctica. 
 \subsubsection{Mergesort}
-Mergesort se trata de un algoritmo recursivo basado en la técnica de División y Conquista, estos algoritmos se caracterizan por ir dividiendo el problema en partes, resolverlo por separado para luego juntar las soluciones.
+Mergesort se trata de un algoritmo recursivo basado en la técnica de División y Conquista, estos algoritmos, como ya vimos, se caracterizan por ir dividiendo el problema en partes, resolverlo por separado para luego juntar las soluciones.
 Del pseudocódigo podemos observar que se tienen dos funciones:
 \begin{itemize}
 \item mergesort
 \item merge
 \end{itemize}
 
-En este caso, el algoritmo se llama a sí mismo $2$ veces. Por lo tanto, al ser de División y Conquista, por el Teorema del Maestro tenemos que:
-\begin{align}
-T_{MS}(n)=aT_{MS}(\frac{n}{b})+f(n)
-\end{align}
-donde $a$ representa la cantidad de llamadas recursivas que deben ser al menos $1$, $b$ es la cantidad de partes en las cuales se divide el problema que debe ser mayor a $1$ y $f(n)$ el costo de trabajo hecho por fuera de las llamadas recursivas, entonces para la primer llamada de la función mergesort es:
+En este caso, el algoritmo se llama a sí mismo $2$ veces. Por lo tanto, al ser de División y Conquista,entonces para la primer llamada de la función mergesort es:
 \begin{align}
 T_{MS}(n)=2T_{MS}(\frac{n}{2})+(T_m(n))
 \end{align}
@@ -198,6 +215,28 @@ numero & tiempo = $\frac{1}{2}(n^2-n)$ \\
 5000 & 12497500\\
 7500 & 28121250\\
 10000 & 49995000\\
+\hline
+\end{tabular}
+\end{center}
+Esta tabla sirve tambien para el metodo de insercion dado que da como maximo las mismas cantidad de iteraciones.
+\subsubsection*{Quicksort}
+Podemos aproximar su tabla como $n.log(n)$
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+numero & tiempo = $nlog2(n)$ \\
+\hline
+50 & 288\\
+100 & 664\\
+500 & 4482\\
+1000 & 9965\\	
+2000 & 21931\\
+3000 & 34652\\
+4000 & 47863\\
+5000 & 61438\\
+7500 & 96545\\
+10000 & 132877\\
 \hline
 \end{tabular}
 \end{center}
@@ -255,7 +294,7 @@ numero & tiempo[seg] \\
 50 & 0.000203688939412\\
 100 & 0.000532706578573\\
 500 & 0.0109893480937\\
-1000 & 0.0393036206563\\	
+11000 & 0.0393036206563\\	
 2000 & 0.180919011434\\
 3000 & 0.427456299464\\
 4000 & 0.725763320923\\
@@ -382,8 +421,8 @@ numero & tiempo[seg] \\
     title={tiempos de ejecucion},
     xlabel={numero de muestras},
     ylabel={tiempo de duracion},
-    xmin=50, xmax=2000,
-    ymin=100, ymax=200000,
+    xmin=50, xmax=500,
+    ymin=100, ymax=20000,
     %xtick={10,100,1000,10000},
     %ytick={5000,5000000},
     legend pos=north west,
@@ -421,10 +460,141 @@ Este algoritmo tiene como peor caso cuando el vector que se ingresa ya está ord
 \subsubsection*{Mergesort}
 Este algoritmo tiene el peor caso cuando los dos elementos más grandes del vector se encuentran en divisiones distintas, generando que el $while$ se tenga que ejecutar $n-1$ veces. Un ejemplo de esto, sería que en la primera mitad del vector estén todos los números pares y en la otra todos los números impares. 
 \subsection{Construir para cada algoritmo y para los rangos del punto “C” sets con las peores características y evaluar los tiempos de ejecución. Comparar con los generados con los sets aleatorios y graficar.}
+\subsubsection*{Inserción}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+numero & insercion & worstcase\\
+\hline
+50 & 0.0001530170 & 0.000303983688354\\
+100 & 0.000789546966553 & 0.00102963447571\\
+500 & 0.0129567146301 & 0.105214285851\\
+1000 & 0.0507660150528 & 0.104745006561\\	
+2000 & 0.198131513596 & 0.605363607407\\
+3000 & 0.454863524437 & 1.2244461298\\
+4000 & 0.8265198946 & 1.85734820366\\
+5000 & 1.21837227345 & 2.72190787792\\
+7500 & 2.73131990433 & 5.73363921642\\
+10000 & 5.05489246845 & 10.2442992687\\
+\hline
+\end{tabular}
+\end{center}
+\subsubsection*{Quicksort}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+numero & quicksort[seg] & worstcase\\
+\hline
+50 & 0.000139880180359 & 0.000417041778564\\
+100 & 0.000377511978149 & 0.00114738941193\\
+500 & 0.00223593711853 & 0.0248492956161\\
+1000 & 0.00327577590942 & error maximo anidacion recursiva\\	
+2000 & 0.00749778747559 & error maximo anidacion recursiva\\
+3000 & 0.0188936948776 & error maximo anidacion recursiva\\
+4000 & 0.0167666196823 & error maximo anidacion recursiva\\
+5000 & 0.0205631256104 & error maximo anidacion recursiva\\
+7500 & 0.0351025819778 & error maximo anidacion recursiva\\
+10000 & 0.0456968307495 & error maximo anidacion recursiva\\
+\hline
+\end{tabular}
+\end{center}
+\subsubsection*{Heapsort}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+numero & tiempo[seg] & worstcase \\
+\hline
+50 & 0.000192523002625 & 0.000309419631958\\
+100 & 0.000444531440735 & 0.000581097602844\\
+500 & 0.00228116512299 & 0.00287048816681\\
+1000 & 0.00560901165009 & 0.00602440834045\\	
+2000 & 0.0169732093811 & 0.0125813961029\\
+3000 & 0.019061589241 & 0.0207741260529\\
+4000 & 0.0249751329422 & 0.0280975818634\\
+5000 & 0.0337036848068 & 0.0369673728943\\
+7500 & 0.0568652629852 & 0.058920788765\\
+10000 & 0.0751173734665 & 0.0707016944885\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Mergesort}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+numero & tiempo[seg] & worstcase\\
+\hline
+50 & 0.000310349464417 & 0.00034384727478\\
+100 & 0.000709843635559 & 0.00091507434845\\
+500 & 0.00552499294281 & 0.00383307933807\\
+1000 & 0.0100009202957 & 0.00577623844147\\	
+2000 & 0.0153873205185 & 0.0130363941193\\
+3000 & 0.0233342170715 & 0.0200843811035\\
+4000 & 0.0295916080475 & 0.0264275789261\\
+5000 & 0.0419291496277 & 0.0344556093216\\
+7500 & 0.0631191015244 & 0.0520595788956\\
+10000 & 0.0835010290146 & 0.0712057828903\\
+\hline
+\end{tabular}
+\end{center}
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+	%xmode=log
+    title={tiempos de ejecucion},
+    xlabel={numero de muestras},
+    ylabel={tiempo de duracion},
+    xmin=50, xmax=10000,
+    ymin=100, ymax=12000000,
+    %xtick={10,100,1000,10000},
+    %ytick={5000,5000000},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+\addplot[
+    color=blue,
+    mark=dot,
+    ]
+    coordinates {
+    (50,203)(100,532)(500,1098)(1000,39303)(2000,180919)(3000,427456)(4000,725763)(5000,1090406)(7500,2633927)(10000,3790898)
+    };
+    \addlegendentry{selection}
+\addplot[color=yellow,mark=dot,]
+    coordinates {(50,303)(100,1029)(500,105214)(1000,104745)(2000,605363)(3000,1224446)(4000,1857348)(5000,2721907)(7500,5733639)(10000,10244299)};\addlegendentry{insection}
+\addplot[color=red,mark=dot,]
+	coordinates {(50,139)(100,377)(500,2235)(1000,3275)};\addlegendentry{quicksort}
+\addplot[color=green,mark=dot,]
+	coordinates {(50,192)(100,444)(500,2281)(1000,5609)(2000,16973)(3000,19061)(4000,24975)(5000,33703)(7500,56865)(10000,75117)};\addlegendentry{heapsort}
+\addplot[color=black,mark=dot,]
+	coordinates {(50,310)(100,709)(500,5524)(1000,10000)(2000,15387)(3000,23334)(4000,29591)(5000,41929)(7500,63119)(10000,83501)};\addlegendentry{megersort}
+\end{semilogxaxis}
+\end{tikzpicture}
+El algoritmo de seleccion tiene como worstcase los mismo valores que en el caso random dado que la cantidad de pasos de ejecucion se mantiene constante, motivo por el cual no se realizo una corrida de este.  El algoritmo de Insercion empeora sus valores, lo cual se puede observar en la tabla que presenta los dos valores el random y el worstcase.  Quicksort empero sus valores hasta el caso de 1000 donde debido a restricciones de el lenguaje en que se implemento el algoritmo Python lanzo que no pudo anidar mas esto se puede salvar con un arreglo en la profundidad del stack que se debe permitir pero para los efectos del presente informe consideramos que alcanza con observar que los datos no solo empeoran sino que consumen todo el stack. Heapsort y Mergesort son los unicos casos donde no solo no empeoran sino que incluso a veces mejoran los resultados.  Tanto el worstcase como el random se encuentran en el mismo orden y esto se debe a que ambos algoritmos tienen un orden $n.log( n)$ para el worstcase como para el caso random.\newline
+De estas observaciones y las recogidas en el analisis de la seccion anterior podemos comprobar que Heapsort y Mergesort tienen el comportamiento mas uniforme.  Sin embargo Quicksort puede presentar tiempos de ejecucion mejores para el caso aleatorio cuando no exista orden dentro del  
 \subsection{En base a los tiempos obtenidos compare con los valores teóricos y analice (Extensión máxima de 2 párrafos).}
 Del gráfico se puede observar que selección e inserción son algoritmos de orden cuadrático mientras que los métodos restantes son de orden logaritmicos y que para muestras mayores a 1000 sus tiempos de ejecución son mucho menores a los primeros. Heapsort, en nuestro análisis teórico, nos resultó ser más lento que el mergesort, debido a la implementación y a que esa cota se ajustaba más al peor caso que al caso promedio y una vez corridos ambos algoritmos pudimos ver que es un poco más rápido porque internamente, el bucle while, no se ejecuta tantas veces.
 En el caso del algoritmo de inserción a pesar que teóricamente tiene tiempos, en promedio menores que el de selección no fue el caso en nuestras pruebas sino todo lo contrario.  Esto se debe a que los swaps realizados por el inserción pesaron más que la menor cantidad de comparaciones frente al de selección.\newline
 Comparando respecto al caso teórico los resultados son coincidentes, para valores grandes los algoritmos se vuelven asintóticos y pondera más su orden que las constantes que los acompañan. 
+
+\subsection{Instrucciones para la ejecucion de los algoritmos de ordenamiento}
+Ingresar el comando siguiente:
+\begin{lstlisting}
+python sorts.py -i algoritmo -n cantidad
+\end{lstlisting}
+donde algoritmo puede ser alguno de los siguientes = selection, insertion, quicksort, heapsort, mergesort\newline
+y cantidad se corresponde con las cantidades solicitadas para este trabajo es decir 50,100,500,1000,2000,3000,4000,5000,7500,10000\newline
+De esta manera si ejecutara el caso con datos random.
+
+Para el worstcase agregarle la opcion -w por ejemplo para 50 muestras y el algoritmo mergesort en el worstcase.
+\begin{lstlisting}
+python sorts.py -i algoritmo -n cantidad -w
+\end{lstlisting}
+La ejecucion de los comando lanzara 10 valores de tiempo de ejecucion expresados en segundos seguidos por un ultimo tiempo indicando el tiempo medio.
+
+\subsection{Codigo Algoritmos de ordenamiento}
+\lstinputlisting[language=Python]{sorts.py}
+
 \newpage
 \section{Parte 2: Variante del algoritmo Gale-Shapley}
 Una liga amateur de Basketball tiene una manera extraña de iniciar la temporada. Un draft se realiza entre 200 jugadores anotados entre los 20 equipos que participaran. Tanto los jugadores como los equipos tienen una lista de preferencia donde establecen en orden decreciente sus elecciones. Cada listado es completo (tienen a todos los jugadores/equipos) y sin empates de preferencia. Se pretende construir un matching estable que termine con 20 equipos de 10 jugadores cada uno.
@@ -436,7 +606,6 @@ Una liga amateur de Basketball tiene una manera extraña de iniciar la temporada
 \item Los jugadores estarán identificados por números entre el 1 y el 200.
 \item Los equipos estarán identificados por números entre el 1 y el 20.
 \end{itemize}
-
 \subsection{Construir el algoritmo de Gale-Shapley modificado para cumplir el requerimiento.}
 
 \begin{lstlisting}
@@ -610,7 +779,7 @@ if __name__ == "__main__":
     Sea una función P(t) que represente la cantidad de pares (x,y) tales que
 	el equipo x le haya ofrecido una posición al jugador y (independientemente de la
 	posición que ocuparía y en el equipo) al término de la iteración t del bloque interno
-	(línea 66).
+	(línea 86).
 	Entonces \(P(t+1) > P(t)\) para todo t ya que un equipo no ofrece 2 veces al mismo jugador.
 	Pero P() al final de todas las iteraciones puede ser a lo sumo igual a todas las
 	combinaciones posibles de equipo-jugador, por lo tanto habrán a lo sumo
@@ -1091,5 +1260,4 @@ La ejecución de esta línea mostrará el contenido de los archivos de preferenc
 \vspace{0.3cm}
 
 \includegraphics{screen_gs_result.png}\par\vspace{1cm}
-
 \end{document}
