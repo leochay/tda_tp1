@@ -94,125 +94,14 @@ def merge(left, right):
         result.extend(right[right_idx:])
     return result        
 
-def runSorts(filerandom):
-  b=[]
-  with open(filerandom, 'r') as f:
-    for line in f:
-      b.append(int(line))
-  #print(b)
-  from timeit import default_timer as timer
-  a=b[:]#slice create a copy of the array
-  start = timer()
-  selectionsort(a)
-  end = timer()
-  print(end - start)
-  a=b[:]
-  start = timer()
-  insertionsort(a)
-  end = timer()
-  print(end - start)
-  a=b[:]
-  start = timer()
-  quicksort(a)
-  end = timer()
-  print(end - start)
-  a=b[:]
-  start = timer()
-  heapsort(a)
-  end = timer()
-  print(end - start)
-  a=b[:]
-  start = timer()
-  mergesort(a)
-  end = timer()
-  print(end - start)
-
-  print(b)
-  return
-
-def selection(filerandom):
-  print("selection")
-  b=[]
-  with open(filerandom, 'r') as f:
-    for line in f:
-      b.append(int(line))
-  #print(b)
-  from timeit import default_timer as timer
-  #slice create a copy of the array
-  results={}
-  mean=0
-  for x in xrange(0,20):
-    print(x)
-    a=b[:]
-    start = timer()
-    selectionsort(a)
-    end = timer()
-    results[x]=end-start
-    print (results[x])
-    mean+=end-start
-  print(x)
-  mean=mean/(x+1)
-  print (mean)
-  return
-
-
-def insertion(filerandom):
-  print("selection")
-  b=[]
-  with open(filerandom, 'r') as f:
-    for line in f:
-      b.append(int(line))
-  #print(b)
-  from timeit import default_timer as timer
-  #slice create a copy of the array
-  results={}
-  mean=0
-  for x in xrange(0,5):
-    print(x)
-    a=b[:]
-    start = timer()
-    insertionsort(a)
-    end = timer()
-    results[x]=end-start
-    print (results[x])
-    mean+=end-start
-  print(x)
-  mean=mean/(x+1)
-  print (mean)
-  return
-
-def insertion(filerandom):
-  print("selection")
-  b=[]
-  with open(filerandom, 'r') as f:
-    for line in f:
-      b.append(int(line))
-  #print(b)
-  from timeit import default_timer as timer
-  #slice create a copy of the array
-  results={}
-  mean=0
-  for x in xrange(0,5):
-    print(x)
-    a=b[:]
-    start = timer()
-    quicksort(a)
-    end = timer()
-    results[x]=end-start
-    print (results[x])
-    mean+=end-start
-  print(x)
-  mean=mean/(x+1)
-  print (mean)
-  return
 
 def sort(type,number,worstcase):
 
   sorts = {'selection': selectionsort,
   'insertion': insertionsort,
-  'quick': quicksort,
-  'merge': mergesort,
-  'heap': heapsort}
+  'quicksort': quicksort,
+  'mergesort': mergesort,
+  'heapsort': heapsort}
 
   method_name = myargs['-i']
      # set by the command line options
@@ -222,7 +111,7 @@ def sort(type,number,worstcase):
     exit()
 
   if worstcase:
-    file='worstcase'
+    file=number+'.'+type+'.worstcase'
   else:
     file=number+'.random'
   b=[]
@@ -248,15 +137,14 @@ def sort(type,number,worstcase):
   print (mean)
   return
 
-def runAll():
-  print ("run all")
-  return
-
 def getopts(argv):
     opts = {}  # Empty dictionary to store key-value pairs.
     while argv:  # While there are arguments left to parse...
-        if argv[0][0] == '-':  # Found a "-name value" pair.
+        if argv[0][0] == '-': # Found a "-name value" pair.
+          if argv[0][1] != 'w':
             opts[argv[0]] = argv[1]  # Add key and value to the dictionary.
+          else:
+            opts['-w']='y'
         argv = argv[1:]  # Reduce the argument list by copying it starting from index 1.
     return opts
 
@@ -265,36 +153,5 @@ if __name__ == '__main__':
     myargs = getopts(argv)
     if myargs.has_key('-i'):
       sort(myargs['-i'],myargs['-n'],myargs.has_key('-w'))
-    else:
-      runAll()
     exit()
-#main
-#print("selection sort")
-##unsortedList=[20,10,50,70,100,3,2,9]
-##f = open('50.random', 'r')
-##list(f)
-##two forms of running a file load
-##first form simple code but not memory efficient
-#with open('50.random', 'r') as f:
-# a=list(f)
-#print(a)
-##doble array conversion from string to int
-#a = [int(i) for i in a]
-##print(a)
-##second form
-#b=[]
-#with open('50.random', 'r') as f:
-# for line in f:
-#   b.append(int(line))
-##print(b)
 
-runSorts('50.random')
-runSorts('100.random')
-runSorts('500.random')
-runSorts('1000.random')
-runSorts('2000.random')
-runSorts('3000.random')
-runSorts('4000.random')
-runSorts('5000.random')
-runSorts('7500.random')
-runSorts('10000 .random')
