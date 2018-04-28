@@ -47,12 +47,6 @@ def init_teams():
 def team_vacancies_available(team):
 	return FREE_POSITION in team
 
-def vacancies_available(teams):
-	for team_number in range(teams_amount):
-		if(team_vacancies_available(teams[team_number])):
-			return True
-	return False
-
 def add_player_to_team(team, player_number):
 	team[team.index(FREE_POSITION)] = player_number
 
@@ -80,13 +74,15 @@ def find_player(teams, player_number):
 	return FREE_POSITION
 
 def run_gale_shapely(teams, teams_preferences, players_preferences):
-	while vacancies_available(teams):
+	vacancies_available = teams_amount * players_by_team
+	while vacancies_available > 0:
 		for team_number in range(teams_amount):
 			while team_vacancies_available(teams[team_number]):
 				team_preference = teams_preferences[team_number].pop(0)
 				other_team_number = find_player(teams, team_preference)
 				if(other_team_number == FREE_POSITION):
 					add_player_to_team(teams[team_number], team_preference)
+					vacancies_available = vacancies_available - 1
 				else:
 					if(compare_preferences(players_preferences[team_preference-1], team_number+1, other_team_number+1) > 0):
 						move_player(teams[other_team_number], teams[team_number], team_preference)
