@@ -75,17 +75,21 @@ def find_player(teams, player_number):
 
 def run_gale_shapely(teams, teams_preferences, players_preferences):
 	vacancies_available = teams_amount * players_by_team
+	team_vacancies_available = [players_by_team for x in range(teams_amount)]
 	while vacancies_available > 0:
 		for team_number in range(teams_amount):
-			while team_vacancies_available(teams[team_number]):
+			while team_vacancies_available[team_number]:
 				team_preference = teams_preferences[team_number].pop(0)
 				other_team_number = find_player(teams, team_preference)
 				if(other_team_number == FREE_POSITION):
 					add_player_to_team(teams[team_number], team_preference)
-					vacancies_available = vacancies_available - 1
+					vacancies_available -= 1
+					team_vacancies_available[team_number] -= 1
 				else:
 					if(compare_preferences(players_preferences[team_preference-1], team_number+1, other_team_number+1) > 0):
 						move_player(teams[other_team_number], teams[team_number], team_preference)
+						team_vacancies_available[other_team_number] += 1
+						team_vacancies_available[team_number] -= 1
 
 def print_preferences(preferences):
 	preferences_str = [str(x) for x in preferences]
