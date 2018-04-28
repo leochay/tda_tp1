@@ -73,7 +73,7 @@ def find_player(teams, player_number):
 			return team_number
 	return FREE_POSITION
 
-def run_gale_shapely(teams, teams_preferences, players_preferences):
+def run_gale_shapley(teams, teams_preferences, players_preferences):
 	vacancies_available = teams_amount * players_by_team
 	team_vacancies_available = [players_by_team for x in range(teams_amount)]
 	while vacancies_available > 0:
@@ -121,7 +121,7 @@ def main():
 	players_preferences = load_players_peferences()
 	teams = init_teams()
 
-	run_gale_shapely(teams, teams_preferences, players_preferences)
+	run_gale_shapley(teams, teams_preferences, players_preferences)
 	
 	print_everything(teams_preferences, players_preferences, teams)
 	
