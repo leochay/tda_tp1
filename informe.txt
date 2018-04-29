@@ -658,12 +658,6 @@ def init_teams():
 def team_vacancies_available(team):
 	return FREE_POSITION in team
 
-def vacancies_available(teams):
-	for team_number in range(teams_amount):
-		if(team_vacancies_available(teams[team_number])):
-			return True
-	return False
-
 def add_player_to_team(team, player_number):
 	team[team.index(FREE_POSITION)] = player_number
 
@@ -690,17 +684,23 @@ def find_player(teams, player_number):
 			return team_number
 	return FREE_POSITION
 
-def run_gale_shapely(teams, teams_preferences, players_preferences):
-	while vacancies_available(teams):
+def run_gale_shapley(teams, teams_preferences, players_preferences):
+	vacancies_available = teams_amount * players_by_team
+	team_vacancies_available = [players_by_team for x in range(teams_amount)]
+	while vacancies_available > 0:
 		for team_number in range(teams_amount):
-			while team_vacancies_available(teams[team_number]):
+			while team_vacancies_available[team_number]:
 				team_preference = teams_preferences[team_number].pop(0)
 				other_team_number = find_player(teams, team_preference)
 				if(other_team_number == FREE_POSITION):
 					add_player_to_team(teams[team_number], team_preference)
+					vacancies_available -= 1
+					team_vacancies_available[team_number] -= 1
 				else:
 					if(compare_preferences(players_preferences[team_preference-1], team_number+1, other_team_number+1) > 0):
 						move_player(teams[other_team_number], teams[team_number], team_preference)
+						team_vacancies_available[other_team_number] += 1
+						team_vacancies_available[team_number] -= 1
 
 def print_preferences(preferences):
 	preferences_str = [str(x) for x in preferences]
@@ -732,7 +732,7 @@ def main():
 	players_preferences = load_players_peferences()
 	teams = init_teams()
 
-	run_gale_shapely(teams, teams_preferences, players_preferences)
+	run_gale_shapley(teams, teams_preferences, players_preferences)
 	
 	print_everything(teams_preferences, players_preferences, teams)
 	
@@ -774,18 +774,72 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \subsection{Probar que el mismo terminará en tiempo polinómico y siempre entregará un matching estable.}
-   1) El algoritmo es de orden O(cantidadEquipos * cantidadJugadores).
-	
-    Sea una función P(t) que represente la cantidad de pares (x,y) tales que
-	el equipo x le haya ofrecido una posición al jugador y (independientemente de la
-	posición que ocuparía y en el equipo) al término de la iteración t del bloque interno
-	(línea 86).
-	Entonces \(P(t+1) > P(t)\) para todo t ya que un equipo no ofrece 2 veces al mismo jugador.
-	Pero P() al final de todas las iteraciones puede ser a lo sumo igual a todas las
-	combinaciones posibles de equipo-jugador, por lo tanto habrán a lo sumo
-	(cantidadEquipos * cantidadJugadores) iteraciones.
+\subsubsection{Órden del algoritmo}
 
-   2) El algoritmo siempre devuelve un matching estable.
+\textbf{El algoritmo es de orden O($3E^2J+EJ^2+12EJ$).}
+
+Comencemos nuestro análisis viendo cuantas veces se repite el bloque interno en el peor caso. Llamaremos "bloque interno" a las líneas entre la 82 y la 92:
+\begin{lstlisting}[firstnumber=82]
+				team_preference = teams_preferences[team_number].pop(0)
+				other_team_number = find_player(teams, team_preference)
+				if(other_team_number == FREE_POSITION):
+					add_player_to_team(teams[team_number], team_preference)
+					vacancies_available -= 1
+					team_vacancies_available[team_number] -= 1
+				else:
+					if(compare_preferences(players_preferences[team_preference-1], team_number+1, other_team_number+1) > 0):
+						move_player(teams[other_team_number], teams[team_number], team_preference)
+						team_vacancies_available[other_team_number] += 1
+						team_vacancies_available[team_number] -= 1
+\end{lstlisting}
+
+Sea J la cantidad de jugadores y E la cantidad de equipos. Sea una función P(t) que represente la cantidad de pares (x,y) tales que el equipo x le haya ofrecido una posición al jugador y (independientemente de la posición que ocuparía y en el equipo) al término de la iteración t del bloque interno. Entonces \(P(t+1) > P(t)\) para todo t ya que un equipo no ofrece 2 veces al mismo jugador. Pero P() al final de todas las iteraciones puede ser a lo sumo igual a todas las combinaciones posibles de equipo-jugador, por lo tanto habrán a lo sumo E*J iteraciones del bloque interno.
+
+Ahora analicemos el bloque interno en si. En el peor caso, la cantidad máxima posible de operaciones ejecutadas en este bloque ocurre cuando el primer if es evaluado en falso y el segundo es evaluado en verdadero. En ese caso el total de operaciones es de 3E+J+9 (suma de las operaciones indicadas a continuación en negrita). Pero como por lo visto anteriormente este bloque se repite a lo sumo EJ veces, entonces el total de operaciones es de $3E^2J+EJ^2+9EJ$.
+
+\begin{itemize}
+  \item Línea 81. La evaluación de la condición del while. \textbf{1 op.}
+  \item Línea 82. La remoción del elemento. \textbf{1 op.}
+  \item Línea 83. La búsqueda de un jugador en los equipos. En la función find\_player, la condición del for se evalúa como máximo E veces, lo cual implica E operaciones. El in del if implica como máximo J/E comparaciones y como por el for que lo envuelve, el if se repite como máximo E veces este if implica J operaciones. \textbf{E+J ops.}
+  \item línea 84. La evaluación de la condición del if. \textbf{1 op.}
+  \item Si la condición es verdadera
+  \begin{itemize}
+    \item Línea 85. Agregar un elemento a una lista. 1 op.
+    \item Línea 86. Decrementar una variable. 1 op.
+    \item Línea 87. Decrementar una variable. 1 op.
+  \end{itemize}
+  \item Si la condición es falsa
+  \begin{itemize}
+  	\item Línea 89. Comparar las preferencias del jugador. En las primeras dos líneas de la función compare\_preferences llamados a la función index que implican como máximo E comparaciones cada una, y los if que siguen como máximo pueden hacer 2 comparaciones. \textbf{2E+2 ops.}
+    \item Si la condición es verdadera:
+    \begin{itemize}
+      \item Línea 90. Mover un elemento de una lista a otra (quitar + agregar). \textbf{2 ops.}
+      \item Línea 91. Incrementar una variable. \textbf{1 op.}
+      \item Línea 92. Decrementar una variable. \textbf{1 op.}
+  	\end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Finalmente vamos a analizar las estructuras de control que rodean al bloque interno:
+
+\begin{lstlisting}[firstnumber=79]
+	while vacancies_available > 0:
+		for team_number in range(teams_amount):
+			while team_vacancies_available[team_number]:
+        	[bloque interno]
+\end{lstlisting}
+
+Como hemos visto, el bloque interno se puede repetir como máximo $EJ$ veces. Por lo tanto, la evaluación de las condiciones de las estructuras de control que lo rodean también pueden repetirse como máximo $EJ$ veces. Como son 3 evaluaciones de condiciones, es un total de $3EJ$ operaciones.
+
+\begin{itemize}
+  \item Línea 79. La evaluación de la condición del while. \textbf{EJ ops.}
+  \item Línea 80. Extracción de un equipo de la lista de equipos. \textbf{EJ ops.} 
+  \item Línea 81. La evaluación de la condición del while. \textbf{EJ ops.}
+\end{itemize}
+
+Por lo tanto, el total de operaciones del algoritmo de Gale-Sapley implementado es de $3E^2J+EJ^2+12EJ$.
+
+\subsubsection{El algoritmo siempre devuelve un matching estable}
    
 	Lo probamos por reducción al absurdo.
 	Supongamos que el algoritmo devuelve 2 tuplas \((e,j,j_2,j_3,j_4...)\) y \((e',j',j_a,j_b,j_c,...)\) 		tales que:
@@ -1254,7 +1308,7 @@ En la siguiente tabla, las columnas representan los equipos numerados del 0 al 1
 Para poder ejecutar el algoritmo, es necesario tener la versión 2.7 de Python instalada.
 Si desea ejecutar el algoritmo con el set de pruebas provisto escriba la siguiente línea de comandos en la consola de su sistema operativo:
 \begin{lstlisting}
-py -2 galeshapely2.py
+py -2 galeshapley.py
 \end{lstlisting}
 La ejecución de esta línea mostrará el contenido de los archivos de preferencias, y el resultado de la ejecución.
 \vspace{0.3cm}
